@@ -1,3 +1,13 @@
+GIT
+  remote: git://github.com/reactjs/react-rails.git
+  revision: dda3c8d999158feea3690a81323259b7160cc3e1
+  specs:
+    react-rails (1.0.0.pre)
+      connection_pool
+      execjs
+      rails (>= 3.1)
+      react-source (= 0.12)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -36,6 +46,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.8.0)
+    connection_pool (2.1.0)
     daemons (1.1.9)
     erubis (2.7.0)
     eventmachine (1.0.3)
@@ -74,6 +85,7 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     rake (10.4.2)
+    react-source (0.12.0)
     ref (1.0.5)
     sass (3.2.19)
     sass-rails (4.0.5)
@@ -116,6 +128,7 @@ DEPENDENCIES
   jbuilder (~> 2.0)
   jquery-rails
   rails (= 4.1.8)
+  react-rails (~> 1.0.0.pre)!
   sass-rails (~> 4.0.3)
   spring
   sqlite3
