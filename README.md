@@ -1,13 +1,23 @@
 Setting up Rails for React and Jest
 ===================================
+[React](http://facebook.github.io/react/) is Awesome! [Rails](http://rubyonrails.org/) is Awesome! [Jest](https://facebook.github.io/jest/) is awesome! Using Jest with React in Rails should be Awesome Cubed... and yet it seems so difficult. 
 
-[React](http://facebook.github.io/react/) is Awesome! [Rails](http://rubyonrails.org/) is Awesome! [Jest](https://facebook.github.io/jest/) is awesome! Using Jest with React in Rails should be Awesome Cubed... and yet it seems so difficult. This article seeks to provide a decent setup for using React in Rails, with all Node packages, Jest test functionality, and react_ujs Rails helpers. We accomplish this using two sweet gems, [react-rails](https://github.com/reactjs/react-rails) and [browserify-rails](https://github.com/browserify-rails/browserify-rails), and a little bit of glue.
+
+Introduction
+============
+Recently, the author was in a position where a legacy project wanted to redesign the front-end while keeping the Rails backend. The project decided to go with a React based redesign phased in, piecemeal, over time. Eventually the old JavaScript would just disappear.
+
+The old JavaScripts had no unit testing, only some integration testing through Cucumber and Selenium. A key requirement of the new front-end was to add unit-testing to the JavaScripts, hopefully getting to a point where the team could practice some [TDD](http://en.wikipedia.org/wiki/Test-driven_development) (despite DHH's proclamation that TDD is dead).
+
+Other guides provided quite a bit of insight on the direction to take. Oliver Lance's [Rails, React, Browserify: Packaging your React components](https://medium.com/@olance/rails-react-browserify-e315001d5974) article was especially useful. However, it did not address testing. Integration tests were possible using Oliver's setup, but Jest was unusable.
+
+This article seeks to provide a decent setup for using React in Rails, with all Node packages, Jest test functionality, and react_ujs Rails helpers. We accomplish this using two sweet gems, [react-rails](https://github.com/reactjs/react-rails) and [browserify-rails](https://github.com/browserify-rails/browserify-rails), and a little bit of glue.
 
 *All of the code used in this article is available on [GitHub](https://github.com/HurricaneJames/rex).*
 
-The General Outline
--------------------
 
+The General Outline
+===================
 - [Basic Rails Setup](#user-content-basic-rails-setup)
 - [React-Rails](#user-content-add-in-react-rails)
 - [Browserify-Rails](#user-content-browserify-rails)
@@ -15,6 +25,7 @@ The General Outline
 - [Jest](#user-content-jest)
 - [Gotchas](#user-content-gotchas-with-jquery-and-other-gem-based-assets)
 - [Conclusion](#user-content-conclusion)
+
 
 Basic Rails Setup
 =================
@@ -67,6 +78,7 @@ We assume a working knowledge of [Rails](http://rubyonrails.org/). However, as a
     end
     ```
 
+
 Add in React-Rails
 ==================
 The best part of [React-Rails](https://github.com/reactjs/react-rails) is the React UJS and the view helpers. However, the stable versions of react-rails only contain react.js. Hopefully the react-rails project will correct this shortcoming in the future as react_ujs is the most valuable part of the gem. In the meantime, use the 1.0.0.pre branch directly from [GitHub](https://github.com/).
@@ -112,6 +124,7 @@ The best part of [React-Rails](https://github.com/reactjs/react-rails) is the Re
     ```
 
 At this point it is possible to create React components by placing them in the `components.js` file and calling them with `react_component 'ComponentName', {props}`. However, it has some limitations. First, it cannot make use of Jest for testing, though Jasmine and full integration tests should work. Second, it is not possible to `require` any node packages like, for example, the [reflux](https://www.npmjs.com/package/reflux) package.
+
 
 Browserify-Rails
 ================
@@ -182,6 +195,7 @@ The general solution for adding CommonJS and `require` for React is to use a pac
 
 There are some things to note about this setup. First, do not `require('react')` via CommonJS `require()`. React is being loaded globaly by react-rails. Second, each and every single component that should be available globally needs to be `require()`d in components.js. CommonJS does not have an equivalent to the sprocket `//= require_tree` directive.
 
+
 Fixing Browserify/React-Rails
 =============================
 Problem, `require('react')` is necessary if we want to use Jest. The solution so far gives `require()`, but not `require('react')`. So, how to get this crucial last requirement. Presently, the only workable solution is to ignore the react.js asset provided by react-rails and use the Node version instead.
@@ -226,6 +240,7 @@ Problem, `require('react')` is necessary if we want to use Jest. The solution so
     ```
 
 Now we can `require('react')`, export the component via `module.exports`, and inject components with `react_component` Rails view helpers.
+
 
 Jest
 ====
@@ -298,6 +313,7 @@ However, Jest really wants a CommonJS structure where everything is included via
 
 5. `npm test`
 
+
 Gotchas with jQuery and other Gem-based Assets
 ==============================================
 The basic Rails application uses the `jquery-rails` gem. `jquery-rails` has the same problem with `require('jquery')` that `react-rails` has with `require('react')`. This will be a problem with any application that adds assets via gems and tries to use both `//= require` and `require()` for that asset. Fortunately, jQuery is resilient to multiple includes, so the biggest concern is bloat.
@@ -319,6 +335,7 @@ Then add jQuery to the devDependencies of `package.json`.
     "jquery": "^2.1.1"
 }
 ```
+
 
 Conclusion
 ==========
