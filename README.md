@@ -324,4 +324,4 @@ Conclusion
 ==========
 We have setup Rails to work with React, Node packages, and Jest. To use this setup, simply add React components to the `app/assets/javascript/components/` directory and put any global components that the `react_ujs` `react_component` view helper might need in `app/assets/javascripts/components.js'. Tests are simple Jest tests in the `app/assets/javascripts/components/__tests/` directory. Rspec/Cucumber integration tests should work as expected too.
 
-I hope this article has been useful to help setup a foundation for using React and Jest in your Rails application.
+Hopefully, this article has been useful to help setup a foundation for using React and Jest in your Rails application.
