@@ -5,8 +5,8 @@ Setting up Rails for React and Jest
 
 *All of the code used in this article is available on [GitHub](https://github.com/HurricaneJames/rex).*
 
-Outline
--------
+The General Outline
+-------------------
 
 - [Basic Rails Setup](#user-content-basic-rails-setup)
 - [React-Rails](#user-content-add-in-react-rails)
