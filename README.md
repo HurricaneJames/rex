@@ -1,7 +1,7 @@
-Setting up Rails for React and JEST
+Setting up Rails for React and Jest
 ===================================
 
-React is Awesome! Rails is Awesome! JEST is awesome! Using JEST with React in Rails should be Awesome Cubed... and yet it seems so difficult. This article seeks to provide a decent setup for using React in Rails, with all Node packages, JEST test functionality, and react_ujs Rails helpers. We accomplish this using two sweet gems, [react-rails](https://github.com/reactjs/react-rails) and [browserify-rails](https://github.com/browserify-rails/browserify-rails), and a little bit of glue.
+[React](http://facebook.github.io/react/) is Awesome! [Rails](http://rubyonrails.org/) is Awesome! [Jest](https://facebook.github.io/jest/) is awesome! Using Jest with React in Rails should be Awesome Cubed... and yet it seems so difficult. This article seeks to provide a decent setup for using React in Rails, with all Node packages, Jest test functionality, and react_ujs Rails helpers. We accomplish this using two sweet gems, [react-rails](https://github.com/reactjs/react-rails) and [browserify-rails](https://github.com/browserify-rails/browserify-rails), and a little bit of glue.
 
 *All of the code used in this article is available on [GitHub](https://github.com/HurricaneJames/rex).*
 
@@ -111,7 +111,7 @@ The best part of [React-Rails](https://github.com/reactjs/react-rails) is the Re
     //= require components
     ```
 
-At this point it is possible to create React components by placing them in the `components.js` file and calling them with `react_component 'ComponentName', {props}`. However, it has some limitations. First, it cannot make use of JEST for testing, though Jasmine and full integration tests should work. Second, it is not possible to `require` any node packages like, for example, the [reflux](https://www.npmjs.com/package/reflux) package.
+At this point it is possible to create React components by placing them in the `components.js` file and calling them with `react_component 'ComponentName', {props}`. However, it has some limitations. First, it cannot make use of Jest for testing, though Jasmine and full integration tests should work. Second, it is not possible to `require` any node packages like, for example, the [reflux](https://www.npmjs.com/package/reflux) package.
 
 Browserify-Rails
 ================
@@ -184,7 +184,7 @@ There are some things to note about this setup. First, do not `require('react')`
 
 Fixing Browserify/React-Rails
 =============================
-Problem, `require('react')` is necessary if we want to use JEST. The solution so far gives `require()`, but not `require('react')`. So, how to get this crucial last requirement. Presently, the only workable solution is to ignore the react.js asset provided by react-rails and use the Node version instead.
+Problem, `require('react')` is necessary if we want to use Jest. The solution so far gives `require()`, but not `require('react')`. So, how to get this crucial last requirement. Presently, the only workable solution is to ignore the react.js asset provided by react-rails and use the Node version instead.
 
 1. Replace `//= require react` with `require('react')` in component.js
 
@@ -227,13 +227,15 @@ Problem, `require('react')` is necessary if we want to use JEST. The solution so
 
 Now we can `require('react')`, export the component via `module.exports`, and inject components with `react_component` Rails view helpers.
 
-JEST
+Jest
 ====
-We can finally get going with JEST. JEST will require updating `package.json`, creating a new directory, and adding a couple of script files.
+We can finally get going with [Jest](https://facebook.github.io/jest/). Jest is based on Jasmine and used by Facebook to test React. It automatically mocks out all modules except those being tested, it can run tests in parallel, and it runs in a fake DOM implementation. Bottom line, Jest is awesome.
+
+However, Jest really wants a CommonJS structure where everything is included via `require()`. That is why we had to go through all the trouble in the previous sections. Fortunately, now that the hard work is done, making Jest work is relatively easy. It requires updating `package.json`, creating a new directory, and adding a couple of script files.
 
 1. Create a directory for the tests in `app/assets/javascripts/components/__tests__`.
     
-    Note that Rails generally puts tests in a `test/` or `spec/` directory. However, it is easier to put JEST tests in a `__tests__` directory closer to the actual components. Placing the tests here has one slight complication, sprocket's `//= require_tree` will include the tests as part of the build. This should not be an issue as the `components/` directory should not be part of any `//= require_tree` directive anyway, as that would break the CommonJS structure we use anyway.
+    Note that Rails generally puts tests in a `test/` or `spec/` directory. However, it is easier to put Jest tests in a `__tests__` directory closer to the actual components. Placing the tests here has one slight complication, sprocket's `//= require_tree` will include the tests as part of the build. This should not be an issue as the `components/` directory should not be part of any `//= require_tree` directive anyway, as that would break the CommonJS structure we use anyway.
 
 2. Create a file `app/assets/components/javascripts/__tests__/preprocessor.js` to convert any JSX to JS (remember that browserify-rails does this via reactify when running via Rails).
 
@@ -248,7 +250,7 @@ We can finally get going with JEST. JEST will require updating `package.json`, c
   };
   ```
 
-3. Add and configure JEST in the `package.json`
+3. Add and configure Jest in the `package.json`
 
   ```json
   "devDependencies": {
@@ -269,10 +271,10 @@ We can finally get going with JEST. JEST will require updating `package.json`, c
   }
   ```
 
-    * rootDir points to the components directory (JEST will automatically load the __tests__ path by default).
+    * rootDir points to the components directory (Jest will automatically load the __tests__ path by default).
     * scriptPreprocessor points to our JSX preprocessor script.
-    * umockedModulePathPatterns tells JEST not to mock out React, which we need for our components to work.
-    * testPathIgnorePatterns tells JEST to ignore our JSX preprocessor. If we had placed it in a different directory we would not need this pattern.
+    * umockedModulePathPatterns tells Jest not to mock out React, which we need for our components to work.
+    * testPathIgnorePatterns tells Jest to ignore our JSX preprocessor. If we had placed it in a different directory we would not need this pattern.
 
 4. `npm install`
 
@@ -320,6 +322,6 @@ Then add jQuery to the devDependencies of `package.json`.
 
 Conclusion
 ==========
-We have setup Rails to work with React, Node packages, and JEST. To use this setup, simply add React components to the `app/assets/javascript/components/` directory and put any global components that the `react_ujs` `react_component` view helper might need in `app/assets/javascripts/components.js'. Tests are simple JEST tests in the `app/assets/javascripts/components/__tests/` directory. Rspec/Cucumber integration tests should work as expected too.
+We have setup Rails to work with React, Node packages, and Jest. To use this setup, simply add React components to the `app/assets/javascript/components/` directory and put any global components that the `react_ujs` `react_component` view helper might need in `app/assets/javascripts/components.js'. Tests are simple Jest tests in the `app/assets/javascripts/components/__tests/` directory. Rspec/Cucumber integration tests should work as expected too.
 
-I hope this article has been useful to help setup a foundation for using React and JEST in your Rails application.
+I hope this article has been useful to help setup a foundation for using React and Jest in your Rails application.
