@@ -9,6 +9,7 @@ gem 'uglifier', '>= 1.3.0'
 gem 'therubyracer',  platforms: :ruby
 
 gem 'react-rails', '~> 1.0.0.pre', github: 'reactjs/react-rails'
+gem 'browserify-rails', '~>0.5'
 
 gem 'jquery-rails'
 gem 'jbuilder', '~> 2.0'
